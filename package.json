@@ -19,7 +19,11 @@
   },
   "homepage": "https://github.com/arloktev/129863-typoteka-3#readme",
   "devDependencies": {
+    "chalk": "4.1.2",
     "eslint": "8.5.0",
     "eslint-config-htmlacademy": "0.6.0"
+  },
+  "dependencies": {
+    "date-fns": "2.28.0"
   }
 }
