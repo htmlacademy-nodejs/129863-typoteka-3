@@ -3,10 +3,10 @@
 const chalk = require(`chalk`);
 
 const packageJson = require(`../../../package.json`);
-const {COMMANDS} = require(`../../constants`);
+const {Command} = require(`../../constants`);
 
 module.exports = {
-  name: COMMANDS.version,
+  name: Command.VERSION,
   run() {
     const version = packageJson.version;
 

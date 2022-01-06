@@ -2,10 +2,10 @@
 
 const chalk = require(`chalk`);
 
-const {COMMANDS} = require(`../../constants`);
+const {Command} = require(`../../constants`);
 
 module.exports = {
-  name: COMMANDS.help,
+  name: Command.HELP,
   run() {
     const text = `
      Программа запускает http-сервер и формирует файл с данными для API.
@@ -13,9 +13,9 @@ module.exports = {
      Гайд:
      service.js <command>
      Команды:
-      ${COMMANDS.version}: выводит номер версии
-      ${COMMANDS.help}: печатает этот текст
-      ${COMMANDS.generate} <count> формирует файл mocks.json
+      ${Command.VERSION}: выводит номер версии
+      ${Command.HELP}: печатает этот текст
+      ${Command.GENERATE}: <count> формирует файл mocks.json
     `;
 
     console.info(chalk.gray(text));

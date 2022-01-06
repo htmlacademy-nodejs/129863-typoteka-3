@@ -1,15 +1,15 @@
 'use strict';
 
-const fs = require(`fs`);
+const fs = require(`fs`).promises;
 const chalk = require(`chalk`);
 const subDays = require(`date-fns/subDays`);
 
-const {COMMANDS, ExitCode} = require(`../../constants`);
-const {getRandomInt, shuffle} = require(`../../utils`);
+const {Command, ExitCode} = require(`../../constants`);
+const {Utils} = require(`../../utils`);
 
 const DEFAULT_COUNT_PUBLICATIONS = 1;
 const MAX_COUNT_PUBLICATIONS = 1000;
-const MAX_COUNT_PUBLICATIONS_ERROR = `Не больше 1000 публикаций`;
+const MAX_COUNT_PUBLICATIONS_ERROR = `Не больше ${MAX_COUNT_PUBLICATIONS} публикаций`;
 const MAX_SUB_DAYS = 90;
 const FILE_NAME = `mocks.json`;
 
@@ -63,6 +63,8 @@ const CATEGORIES = [
   `Железо`,
 ];
 
+const {shuffle, getRandomInt} = Utils;
+
 const generatePublications = (count) => {
   return new Array(count).fill({
     title: TITLES[getRandomInt(0, TITLES.length - 1)],
@@ -74,25 +76,27 @@ const generatePublications = (count) => {
 };
 
 module.exports = {
-  name: COMMANDS.generate,
+  name: Command.GENERATE,
   async run(args) {
     const [count] = args;
     const countPublications = parseInt(count, 10) || DEFAULT_COUNT_PUBLICATIONS;
 
     if (countPublications > MAX_COUNT_PUBLICATIONS) {
       console.info(chalk.red(MAX_COUNT_PUBLICATIONS_ERROR));
-      process.exit(ExitCode.error);
+      process.exit(ExitCode.ERROR);
     }
 
     const publications = JSON.stringify(generatePublications(countPublications));
 
-    fs.writeFile(FILE_NAME, publications, (error) => {
-      if (error) {
-        process.exit(ExitCode.error);
-      }
+    try {
+      await fs.writeFile(FILE_NAME, publications);
 
-      process.exit(ExitCode.success);
-    });
+      console.log(chalk.green(`Файл успешно создан`));
+      process.exit(ExitCode.SUCCESS);
+    } catch (error) {
+      console.error(chalk.red(`Ошибка создания файла`));
+      process.exit(ExitCode.ERROR);
+    }
   }
 };
 
