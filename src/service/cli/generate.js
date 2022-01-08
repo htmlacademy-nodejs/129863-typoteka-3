@@ -4,15 +4,13 @@ const fs = require(`fs`).promises;
 const chalk = require(`chalk`);
 const subDays = require(`date-fns/subDays`);
 
-const {Command, ExitCode} = require(`../../constants`);
+const {Command, ExitCode, FILE_MOCKS} = require(`../../constants`);
 const Utils = require(`../../utils`);
 
 const DEFAULT_COUNT_PUBLICATIONS = 1;
 const MAX_COUNT_PUBLICATIONS = 1000;
 const MAX_COUNT_PUBLICATIONS_ERROR = `Не больше ${MAX_COUNT_PUBLICATIONS} публикаций`;
 const MAX_SUB_DAYS = 90;
-
-const FILE_NAME = `mocks.json`;
 
 const FilePath = {
   TITLES: `./data/titles.txt`,
@@ -29,13 +27,17 @@ const FilePath = {
  * @return {*[]}
  */
 const generatePublications = (count, titles, sentences, categories) => {
-  return new Array(count).fill({
-    title: titles[Utils.getRandomInt(0, titles.length - 1)],
-    createdDate: subDays(new Date(), Utils.getRandomInt(0, MAX_SUB_DAYS)),
-    announce: Utils.shuffle(sentences).slice(0, 5).join(` `),
-    fullText: Utils.shuffle(sentences).slice(0, Utils.getRandomInt(0, sentences.length - 1)).join(` `),
-    category: [...Utils.shuffle(categories).slice(0, Utils.getRandomInt(0, categories.length - 1))],
-  });
+  return new Array(count)
+    .fill({})
+    .map(() => {
+      return {
+        title: titles[Utils.getRandomInt(0, titles.length - 1)],
+        createdDate: subDays(new Date(), Utils.getRandomInt(0, MAX_SUB_DAYS)),
+        announce: Utils.shuffle(sentences).slice(0, 5).join(` `),
+        fullText: Utils.shuffle(sentences).slice(0, Utils.getRandomInt(0, sentences.length - 1)).join(` `),
+        category: [...Utils.shuffle(categories).slice(0, Utils.getRandomInt(0, categories.length - 1))],
+      };
+    });
 };
 
 /**
@@ -74,7 +76,7 @@ module.exports = {
     const publications = JSON.stringify(generatePublications(countPublications, titles, sentences, categories));
 
     try {
-      await fs.writeFile(FILE_NAME, publications);
+      await fs.writeFile(FILE_MOCKS, publications);
 
       console.log(chalk.green(`Файл успешно создан`));
       process.exit(ExitCode.SUCCESS);
