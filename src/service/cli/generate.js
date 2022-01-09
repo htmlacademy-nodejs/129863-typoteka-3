@@ -13,9 +13,12 @@ const MAX_COUNT_PUBLICATIONS_ERROR = `Не больше ${MAX_COUNT_PUBLICATIONS
 const MAX_SUB_DAYS = 90;
 
 const FILE_NAME = `mocks.json`;
-const FILE_TITLES_PATH = `./data/titles.txt`;
-const FILE_SENTENCES_PATH = `./data/sentences.txt`;
-const FILE_CATEGORIES_PATH = `./data/categories.txt`;
+
+const FilePath = {
+  TITLES: `./data/titles.txt`,
+  SENTENCES: `./data/sentences.txt`,
+  CATEGORIES: `./data/categories.txt`
+};
 
 /**
  * Генерация публикаций
@@ -54,9 +57,11 @@ const readContent = async (path) => {
 module.exports = {
   name: Command.GENERATE,
   async run(args) {
-    const titles = await readContent(FILE_TITLES_PATH);
-    const sentences = await readContent(FILE_SENTENCES_PATH);
-    const categories = await readContent(FILE_CATEGORIES_PATH);
+    const [titles, sentences, categories] = await Promise.all([
+      readContent(FilePath.TITLES),
+      readContent(FilePath.SENTENCES),
+      readContent(FilePath.CATEGORIES),
+    ]);
 
     const [count] = args;
     const countPublications = parseInt(count, 10) || DEFAULT_COUNT_PUBLICATIONS;
