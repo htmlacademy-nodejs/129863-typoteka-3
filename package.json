@@ -6,7 +6,11 @@
   "scripts": {
     "test": "npm run eslint",
     "eslint": "eslint --ext .js src/",
-    "start": "nodemon ./src/service/service.js --server 3000"
+    "start": "node ./src/service/service.js",
+    "server": "node ./src/service/service.js --server 3000",
+    "server:dev": "nodemon ./src/service/service.js --server 3000",
+    "start-front-server": "node ./src/express/express.js",
+    "start-front-server:dev": "nodemon ./src/express/express.js"
   },
   "repository": {
     "type": "git",
@@ -25,6 +29,7 @@
     "nodemon": "2.0.15"
   },
   "dependencies": {
-    "date-fns": "2.28.0"
+    "date-fns": "2.28.0",
+    "express": "4.17.2"
   }
 }
